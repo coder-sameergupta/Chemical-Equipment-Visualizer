@@ -59,3 +59,4 @@ cd desktop_frontend
 
 Backend: Added equipment database models
 Backend: Implemented CSV upload functionality
+Backend: Added Pandas CSV parsing and preprocessing
