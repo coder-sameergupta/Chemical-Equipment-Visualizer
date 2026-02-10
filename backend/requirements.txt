@@ -1,0 +1,10 @@
+Django
+djangorestframework
+django-cors-headers
+gunicorn
+pandas
+numpy
+matplotlib
+plotly
+reportlab
+beautifulsoup4
