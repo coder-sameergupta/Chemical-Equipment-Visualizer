@@ -1,10 +1,7 @@
-Django
+Django==4.2.7
 djangorestframework
 django-cors-headers
 gunicorn
 pandas
 numpy
-matplotlib
-plotly
 reportlab
-beautifulsoup4
