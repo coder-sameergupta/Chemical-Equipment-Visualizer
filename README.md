@@ -1,76 +1,149 @@
 # Chemical Equipment Parameter Visualizer
 
-A hybrid application (Web + Desktop) for analyzing and visualizing chemical equipment data.
+Hybrid Web + Desktop Application (Django + React + PyQt5)
 
-## Features
-- **Centralized Backend**: Django + REST Framework.
-- **Web Frontend**: React + Chart.js (Modern Dark UI).
-- **Desktop Frontend**: PyQt5 + Matplotlib.
-- **Analytics**: CSV Upload, Automatic Summary Statistics, Data Visualization.
-- **Reporting**: PDF Report Generation.
+---
 
-## Prerequisites
-- Python 3.10+
-- Node.js & npm
+## 📌 Project Overview
 
-## Setup & Running
+This project is a hybrid data visualization and analytics system for chemical equipment datasets.
 
-### 1. Backend (Django)
-The backend manages the database and API.
+Users upload a CSV file containing equipment information (Equipment Name, Type, Flowrate, Pressure, Temperature).
+The Django backend processes the data using Pandas and exposes REST APIs.
 
-```bash
+The same backend is consumed by:
+
+* A React.js web application
+* A PyQt5 desktop application
+
+Both interfaces display tables, analytics charts, summaries and downloadable reports.
+
+---
+
+## ⚙️ Tech Stack
+
+**Backend**
+
+* Django
+* Django REST Framework
+* Pandas
+* SQLite
+
+**Web Frontend**
+
+* React.js
+* Chart.js
+
+**Desktop Frontend**
+
+* PyQt5
+* Matplotlib
+
+**Other Features**
+
+* Authentication
+* PDF report generation
+* Dataset history storage
+
+---
+
+## ✨ Features
+
+* Upload CSV dataset
+* Automatic data parsing and validation
+* Average Flowrate, Pressure and Temperature calculation
+* Equipment type distribution charts
+* Data table visualization
+* Last 5 dataset history tracking
+* PDF report generation
+* Login authentication
+* Web + Desktop interfaces using same backend API
+
+---
+
+## 🧪 Sample Dataset
+
+A sample file is included:
+
+```
+sample_equipment_data.csv
+```
+
+Use it for testing.
+
+---
+
+## 🛠 Installation & Setup
+
+### 1️⃣ Run Backend (Django)
+
+```
 cd backend
-# Create virtual environment (if not exists)
 python -m venv venv
-.\venv\Scripts\activate
-
-# Install dependencies
+venv\Scripts\activate
 pip install -r requirements.txt
-pip install PyQt5 requests  # For Desktop App
-
-# Migrations
-python manage.py makemigrations
 python manage.py migrate
-
-# Run Server
 python manage.py runserver
 ```
-API will be available at `http://localhost:8000/api/`.
 
-### 2. Web Application (React)
-```bash
+Backend runs at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+### 2️⃣ Run Web Application (React)
+
+Open a new terminal:
+
+```
 cd web_frontend
 npm install
-npm run dev
+npm start
 ```
-Open `http://localhost:5173`. Login with any credentials (Mock Auth).
 
-### 3. Desktop Application (PyQt5)
-```bash
+Web app runs at:
+
+```
+http://localhost:3000
+```
+
+---
+
+### 3️⃣ Run Desktop Application (PyQt5)
+
+```
 cd desktop_frontend
-# Ensure backend venv is activated or installed in your environment
-..\backend\venv\Scripts\python main.py
+pip install -r requirements.txt
+python main.py
 ```
 
-## Usage
-1.  **Upload**: Use `sample_equipment_data.csv` provided in the root.
-2.  **Analyze**: View Dashboard for charts and stats.
-3.  **Report**: Click "Download PDF Report" on Web or Desktop.
+---
 
-Backend: Added equipment database models
-Backend: Implemented CSV upload functionality
-Backend: Added Pandas CSV parsing and preprocessing
-Backend: Calculated average flowrate, pressure and temperature
-Backend: Implemented equipment type distribution analysis
-Backend: Created REST API endpoints using Django REST Framework
-Backend: Added user authentication system
-Backend: Implemented PDF report generation
-Web: Initialized React frontend application
-Web: Created CSV upload page and data table interface
-Web: Added Chart.js data visualization charts
-Web: Connected React frontend to Django REST API
-Web: Displayed last 5 uploaded dataset history
-Desktop: Created PyQt5 desktop application interface
-Desktop: Integrated Matplotlib charts for visualization
-Project: Added sample equipment dataset for testing and demo
-Project: Final testing, bug fixes and UI improvements
+## 🔐 Login
+
+Create a user:
+
+```
+python manage.py createsuperuser
+```
+
+Then login using those credentials.
+
+---
+
+## 📊 What the Application Demonstrates
+
+* CSV ingestion and data processing
+* REST API design
+* Hybrid client architecture
+* Data visualization
+* Desktop + Web integration with a shared backend
+
+---
+
+## 🎥 Demo Video
+
+(Will be added here)
