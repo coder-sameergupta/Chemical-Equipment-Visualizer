@@ -180,9 +180,6 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
-from reportlab.platypus import Image as RLImage
-import matplotlib.pyplot as plt
-import io
 
 class PDFReportView(APIView):
     permission_classes = [IsAuthenticated]
@@ -194,77 +191,52 @@ class PDFReportView(APIView):
         doc = SimpleDocTemplate(response, pagesize=letter)
         elements = []
         styles = getSampleStyleSheet()
-        
+
         # Title
         title_style = ParagraphStyle(
             'TitleStyle',
             parent=styles['Heading1'],
             fontSize=18,
             textColor=colors.HexColor('#0f172a'),
-            alignment=1, # Center
+            alignment=1,
             spaceAfter=20
         )
-        elements.append(Paragraph(f"Equipment Usage Report", title_style))
+        elements.append(Paragraph("Chemical Equipment Report", title_style))
         elements.append(Spacer(1, 10))
-        
+
         # Metadata
-        meta_style = ParagraphStyle('Meta', parent=styles['Normal'], fontSize=10, textColor=colors.gray)
-        elements.append(Paragraph(f"<b>Upload ID:</b> {upload_id} | <b>User:</b> {request.user.username} | <b>Date:</b> {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}", meta_style))
+        meta_style = ParagraphStyle(
+            'Meta',
+            parent=styles['Normal'],
+            fontSize=10,
+            textColor=colors.gray
+        )
+        elements.append(Paragraph(
+            f"<b>Upload ID:</b> {upload_id} | <b>User:</b> {request.user.username} | <b>Date:</b> {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}",
+            meta_style))
         elements.append(Spacer(1, 20))
 
         try:
             upload = UploadHistory.objects.get(id=upload_id, user=request.user)
             equipment = EquipmentData.objects.filter(upload=upload)
-            
-            # --- Aggregates ---
+
+            # Aggregates
             aggregates = equipment.aggregate(
                 avg_flow=Avg('flowrate'),
                 avg_press=Avg('pressure'),
                 avg_temp=Avg('temperature')
             )
-            
-            # --- CHARTS GENERATION ---
-            # Set backend to Agg to avoid GUI issues
-            plt.switch_backend('Agg')
-            
-            # 1. Parameter Trends (Line Chart)
-            fig1, ax1 = plt.subplots(figsize=(7, 3.5))
-            names = list(equipment.values_list('equipment_name', flat=True))
-            flow = list(equipment.values_list('flowrate', flat=True))
-            press = list(equipment.values_list('pressure', flat=True))
-            
-            # Limit to top 20 for readability in chart if too many
-            if len(names) > 20:
-                names = names[:20]
-                flow = flow[:20]
-                press = press[:20]
 
-            ax1.plot(names, flow, label='Flowrate', marker='o', markersize=4)
-            ax1.plot(names, press, label='Pressure', marker='s', markersize=4)
-            ax1.set_title('Parameter Trends (Top 20)', fontsize=10)
-            ax1.legend()
-            plt.xticks(rotation=45, ha='right', fontsize=8)
-            plt.tight_layout()
-            
-            img_buffer1 = io.BytesIO()
-            plt.savefig(img_buffer1, format='png', dpi=100)
-            img_buffer1.seek(0)
-            plt.close(fig1)
-
-            elements.append(Paragraph("Data Visualization", styles['Heading2']))
-            elements.append(RLImage(img_buffer1, width=450, height=225))
-            elements.append(Spacer(1, 15))
-
-            # --- SUMMARY TABLE ---
+            # Summary Table
             summary_data = [
                 ['Metric', 'Value'],
                 ['Total Records', str(equipment.count())],
-                ['Avg Flowrate', f"{aggregates['avg_flow']:.2f}"],
-                ['Avg Pressure', f"{aggregates['avg_press']:.2f}"],
-                ['Avg Temperature', f"{aggregates['avg_temp']:.2f}"]
+                ['Average Flowrate', f"{aggregates['avg_flow']:.2f}" if aggregates['avg_flow'] else "0"],
+                ['Average Pressure', f"{aggregates['avg_press']:.2f}" if aggregates['avg_press'] else "0"],
+                ['Average Temperature', f"{aggregates['avg_temp']:.2f}" if aggregates['avg_temp'] else "0"]
             ]
-            
-            summary_table = Table(summary_data, colWidths=[200, 200])
+
+            summary_table = Table(summary_data, colWidths=[250, 200])
             summary_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (1, 0), colors.HexColor('#0ea5e9')),
                 ('TEXTCOLOR', (0, 0), (1, 0), colors.whitesmoke),
@@ -274,15 +246,15 @@ class PDFReportView(APIView):
                 ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f0f9ff')),
                 ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#bae6fd')),
             ]))
-            
+
             elements.append(Paragraph("Summary Statistics", styles['Heading2']))
             elements.append(summary_table)
-            elements.append(Spacer(1, 20))
-            
-            # --- DATA TABLE ---
-            elements.append(Paragraph("Detailed Equipment Data (Top 50)", styles['Heading2']))
-            
-            data = [['Name', 'Type', 'Flow', 'Press', 'Temp']]
+            elements.append(Spacer(1, 25))
+
+            # Equipment Table
+            elements.append(Paragraph("Equipment Details (Top 50)", styles['Heading2']))
+
+            data = [['Name', 'Type', 'Flowrate', 'Pressure', 'Temperature']]
             for item in equipment[:50]:
                 data.append([
                     item.equipment_name,
@@ -291,8 +263,8 @@ class PDFReportView(APIView):
                     str(item.pressure),
                     str(item.temperature)
                 ])
-                
-            data_table = Table(data, colWidths=[150, 100, 80, 80, 80])
+
+            data_table = Table(data, colWidths=[140, 120, 80, 80, 80])
             data_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#334155')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -303,14 +275,11 @@ class PDFReportView(APIView):
                 ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
                 ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
             ]))
-            
+
             elements.append(data_table)
-            
+
         except UploadHistory.DoesNotExist:
-             elements.append(Paragraph("Error: Upload not found or access denied.", styles['Normal']))
-        except Exception as e:
-             elements.append(Paragraph(f"Error generating report: {str(e)}", styles['Normal']))
-             print(f"PDF Gen Error: {e}")
-        
+            elements.append(Paragraph("Upload not found or access denied.", styles['Normal']))
+
         doc.build(elements)
         return response
