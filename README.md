@@ -65,3 +65,4 @@ Backend: Implemented equipment type distribution analysis
 Backend: Created REST API endpoints using Django REST Framework
 Backend: Added user authentication system
 Backend: Implemented PDF report generation
+Web: Initialized React frontend application
