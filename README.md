@@ -62,3 +62,4 @@ Backend: Implemented CSV upload functionality
 Backend: Added Pandas CSV parsing and preprocessing
 Backend: Calculated average flowrate, pressure and temperature
 Backend: Implemented equipment type distribution analysis
+Backend: Created REST API endpoints using Django REST Framework
