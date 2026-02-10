@@ -72,3 +72,4 @@ Web: Connected React frontend to Django REST API
 Web: Displayed last 5 uploaded dataset history
 Desktop: Created PyQt5 desktop application interface
 Desktop: Integrated Matplotlib charts for visualization
+Project: Added sample equipment dataset for testing and demo
