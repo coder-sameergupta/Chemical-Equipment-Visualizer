@@ -58,3 +58,4 @@ cd desktop_frontend
 3.  **Report**: Click "Download PDF Report" on Web or Desktop.
 
 Backend: Added equipment database models
+Backend: Implemented CSV upload functionality
