@@ -68,3 +68,4 @@ Backend: Implemented PDF report generation
 Web: Initialized React frontend application
 Web: Created CSV upload page and data table interface
 Web: Added Chart.js data visualization charts
+Web: Connected React frontend to Django REST API
