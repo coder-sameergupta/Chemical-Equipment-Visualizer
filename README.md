@@ -145,5 +145,4 @@ Then login using those credentials.
 ---
 
 ## 🎥 Demo Video
-
-(Will be added here)
+(https://drive.google.com/file/d/1vHcBtY4LnQ7QwR38cuxMxWS7VnCjfgsK/view?usp=sharing)
