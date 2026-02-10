@@ -56,3 +56,5 @@ cd desktop_frontend
 1.  **Upload**: Use `sample_equipment_data.csv` provided in the root.
 2.  **Analyze**: View Dashboard for charts and stats.
 3.  **Report**: Click "Download PDF Report" on Web or Desktop.
+
+Backend: Added equipment database models
