@@ -1,0 +1,8 @@
+django>=5.0
+djangorestframework
+pandas
+matplotlib
+reportlab
+django-cors-headers
+requests
+markdown
